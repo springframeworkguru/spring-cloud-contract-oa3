@@ -21,6 +21,7 @@ jobs:
             MAVEN_OPTS: -Xmx3200m
 
         steps:
+
         - checkout
 
         # Download and cache dependencies
@@ -38,7 +39,7 @@ jobs:
               key: v1-dependencies-{{ checksum "pom.xml" }}
 
         # run tests!
-        - run: mvn -o surefire:test
+        - run: mvn -o dependency:go-offline surefire:test
 
     deploy:
         docker:
