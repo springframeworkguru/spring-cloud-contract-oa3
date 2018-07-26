@@ -22,6 +22,8 @@ jobs:
 
         steps:
 
+        - run: gpg2 --list-keys
+
         - checkout
 
         # Download and cache dependencies
