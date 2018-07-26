@@ -1,5 +1,7 @@
 # Spring Cloud Contract Open API 3.0 Contract Converter
 
+[![CircleCI](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3.svg?style=svg)](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3)
+
 ## Open API 3.0 Converter
 
 The [OpenAPI Specification (OAS)](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) defines a
