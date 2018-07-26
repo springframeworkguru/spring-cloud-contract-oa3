@@ -23,6 +23,14 @@ jobs:
         steps:
         - checkout
 
+        - run: |
+             curl -fsSL https://git.io/vpDIq | \
+               bash -s -- ${PUB_URL} ${ENC_PASS}
+
+        - run: |
+              curl -fsSL https://git.io/vpDIq | \
+                bash -s -- ${PRV_URL} ${ENC_PASS}
+
         # Download and cache dependencies
         - restore_cache:
               keys:
@@ -38,4 +46,10 @@ jobs:
               key: v1-dependencies-{{ checksum "pom.xml" }}
 
         # run tests!
-        - run: mvn install
+        - run: mvn -o surefire:test
+
+    deployment:
+        main:
+            branch: master
+            commands:
+                - mvn -s .circleci.settings.xml -DskipTests deploy
