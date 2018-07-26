@@ -1,0 +1,115 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: SCC
+paths:
+  /foo:
+    put:
+        x-contracts:
+            - contractId: 1
+              description: Some description
+              name: some name
+              priority: 8
+              ignored: true
+        parameters:
+          - name: a
+            in: query
+            schema:
+                type: string
+            x-contracts:
+                - contractId: 1
+                  default: b
+          - name: b
+            in: query
+            schema:
+                type: string
+            x-contracts:
+                - contractId: 1
+                  default: c
+          - name: foo
+            in: header
+            schema:
+                type: string
+            x-contracts:
+                - contractId: 1
+                  default: bar
+          - name: fooReq
+            in: header
+            schema:
+                type: string
+            x-contracts:
+                - contractId: 1
+                  default: baz
+          - name: foo
+            in: cookie
+            schema:
+              type: string
+            x-contracts:
+                - contractId: 1
+                  default: bar
+          - name: fooReq
+            in: cookie
+            schema:
+              type: string
+            x-contracts:
+                - contractId: 1
+                  default: baz
+        requestBody:
+            content:
+                application/json:
+                    schema:
+                      properties:
+                        foo:
+                          type: string
+            x-contracts:
+                - contractId: 1
+                  body:
+                    foo: bar
+                  matchers:
+                      body:
+                        - path: $.foo
+                          type: by_regex
+                          value: bar
+                      headers:
+                        - key: foo
+                          regex: bar
+        responses:
+            '200':
+                description: the response
+                content:
+                    application/json:
+                        schema:
+                            properties:
+                              foo:
+                                type: string
+                x-contracts:
+                    - contractId: 1
+                      headers:
+                        foo2: bar
+                        foo3: foo33
+                        fooRes: baz
+                      body:
+                        foo2: bar
+                        foo3: baz
+                        nullValue: null
+                      matchers:
+                        body:
+                          - path: $.foo2
+                            type: by_regex
+                            value: bar
+                          - path: $.foo3
+                            type: by_command
+                            value: executeMe($it)
+                          - path: $.nullValue
+                            type: by_null
+                            value: null
+                        headers:
+                          - key: foo2
+                            regex: bar
+                          - key: foo3
+                            command: andMeToo($it)
+                        cookies:
+                          - key: foo2
+                            regex: bar
+                          - key: foo3
+                            predefined:

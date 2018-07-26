@@ -1,0 +1,110 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: Example fraud detection service using consumer driven contracts
+  version: "1.0.0"
+  title: Fraud Detection Service
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: Fraud Service
+    description: Fraud Service
+paths:
+  /fraudcheck:
+    put:
+      tags:
+        - Fraud Service
+      summary: Checks client id for suspected Fraud
+      operationId: fraudCheck
+      description: For given client id and loan amount, service will examine client profile and determine request is too high
+      # Define Contracts
+      x-contracts:
+        - contractId: 1
+          name: Should Mark Client As Fraud
+        - contractId: 2
+          name: Test Loan Amount okay
+        - contractId: 3
+          name: Test missing loan amount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudCheckRequest'
+            example: "{ 'clientId': '123456789', 'loanAmount': 999999 }"
+        description: Client and Loan Amount to check
+        # Define requests for each contract
+        x-contracts:
+            - contractId: 1
+              body:
+                "client.id" : 1452656883
+                loanAmount: 99999
+              matchers:
+                body:
+                  - $ref: '#/components/x-matchers/clientMatcher' # reusable component
+            - contractId: 2
+              body:
+                clientId: 1234567890
+                loanAmount: 500
+              matchers:
+                body:
+                  - $ref: '#/components/x-matchers/clientMatcher'
+            - contractId: 3
+              body:
+                clientId: 1234567890
+                #missing loan amount
+      responses:
+        '200':
+          description: okay
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudCheckResponse'
+              example: "{ 'fraudCheckStatus': 'FRAUD', 'rejectionReason': 'Amount too high' }"
+          # Define expected responses for contracts
+          x-contracts:
+            - contractId: 1
+              # Status inferred from OpenAPI
+              # Headers - contentType can be inferred from OpenAPI response object
+              body:
+                fraudCheckStatus: "FRAUD"
+                rejectionReason: 'Amount too high'
+            - contractId: 2
+              body:
+                fraudCheckStatus: "OK"
+        '400':
+          description: 'invalid input, object invalid'
+          x-contracts:
+            - contractId: 3
+components:
+  schemas:
+    FraudCheckRequest:
+      type: object
+      required:
+        - clientId
+        - loanAmount
+      properties:
+        clientId:
+          type: string
+          pattern: '[0-9]{10}'
+          description: Client Id
+        loanAmount:
+          type: number
+    FraudCheckResponse:
+      type: object
+      required:
+        - fraudCheckStatus
+      properties:
+        fraudCheckStatus:
+          type: string
+          enum: [FRAUD, OKAY]
+        rejectionReason:
+          type: string
+          description: Reason Message
+  x-matchers:
+    clientMatcher:
+      path: $.['clientId']
+      type: by_regex
+      value: "[0-9]{10}"
