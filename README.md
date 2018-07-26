@@ -31,7 +31,7 @@ property is an object, which provides the necessary flexibility to define intera
 The below snippet shows the definition of two contracts by extending the
 [Operation Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject) of the OA3 specification.
 
-[source,yml,indent=0]
+
 ```yaml
 paths:
     /fraudcheck:
