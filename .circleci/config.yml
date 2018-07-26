@@ -39,7 +39,7 @@ jobs:
               key: v1-dependencies-{{ checksum "pom.xml" }}
 
         # run tests!
-        - run: mvn -o dependency:go-offline surefire:test
+        - run: mvn surefire:test
 
     deploy:
         docker:
