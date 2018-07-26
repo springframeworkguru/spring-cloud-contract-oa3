@@ -23,14 +23,6 @@ jobs:
         steps:
         - checkout
 
-        - run: |
-             curl -fsSL https://git.io/vpDIq | \
-               bash -s -- ${PUB_URL} ${ENC_PASS}
-
-        - run: |
-              curl -fsSL https://git.io/vpDIq | \
-                bash -s -- ${PRV_URL} ${ENC_PASS}
-
         # Download and cache dependencies
         - restore_cache:
               keys:
@@ -49,5 +41,39 @@ jobs:
         - run: mvn -o surefire:test
 
     deploy:
+        docker:
+        # specify the version you desire here
+        - image: circleci/openjdk:8-jdk
+
+        working_directory: ~/repo
+
+        environment:
+            # Customize the JVM maximum heap limit
+            MAVEN_OPTS: -Xmx3200m
         steps:
-         - run: mvn -s .circleci.settings.xml -DskipTests deploy
+
+        - checkout
+
+        # Download and cache dependencies
+        - restore_cache:
+              keys:
+              - v1-dependencies-{{ checksum "pom.xml" }}
+              # fallback to using the latest cache if no exact match is found
+              - v1-dependencies-
+
+        - run: mvn dependency:go-offline
+
+        - save_cache:
+              paths:
+              - ~/.m2
+              key: v1-dependencies-{{ checksum "pom.xml" }}
+
+        - run: |
+              curl -fsSL https://git.io/vpDIq | \
+                bash -s -- ${PUB_URL} ${ENC_PASS}
+
+        - run: |
+              curl -fsSL https://git.io/vpDIq | \
+                bash -s -- ${PRV_URL} ${ENC_PASS}
+
+        - run: mvn -s .circleci.settings.xml -DskipTests deploy
