@@ -48,8 +48,6 @@ jobs:
         # run tests!
         - run: mvn -o surefire:test
 
-    deployment:
-        main:
-            branch: master
-            commands:
-                - mvn -s .circleci.settings.xml -DskipTests deploy
+    deploy:
+        steps:
+         - run: mvn -s .circleci.settings.xml -DskipTests deploy
