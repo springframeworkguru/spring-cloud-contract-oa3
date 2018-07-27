@@ -29,19 +29,6 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
         try {
             def spec = new OpenAPIV3Parser().read(file.path)
 
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-            println "############################"
-
             if (spec == null) {
                 log.debug("Spec Not Found")
                 throw new RuntimeException("Spec not found")

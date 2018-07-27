@@ -14,6 +14,46 @@ implementation logic.
 An OpenAPI definition can then be used by documentation generation tools to display the API, code generation tools to
 generate servers and clients in various programming languages, testing tools, and many other use cases.
 
+## Usage
+
+### Maven
+To enable this plugin, you will need to add the OA3 converter jar to your project as follows:
+
+Add to your maven dependencies: 
+
+```xml
+    <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+        <scope>test</scope>
+    </dependency>
+```
+
+The artifact also needs to be added to the Maven Plugin:
+
+```xml
+    <plugin>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+        <version>${spring-cloud-contract.version}</version>
+        <extensions>true</extensions>
+        <configuration>
+            <packageWithBaseClasses>com.example.fraud</packageWithBaseClasses>
+        </configuration>
+        <dependencies>
+        <!--needed to include oa3 converter-->
+        <dependency>
+            <groupId>guru.springframework</groupId>
+            <artifactId>spring-cloud-contract-oa3</artifactId>
+            <version>2.0.1</version>
+            </dependency>
+        </dependencies>
+    </plugin>
+```
+
+### Gradel
+Coming soon... 
+
 ##  Defining Contracts in Open API
 
 Natively, Open API does a great job of describing an API in a holistic manner.
