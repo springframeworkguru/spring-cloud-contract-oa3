@@ -40,12 +40,14 @@ jobs:
               - ~/.m2
               key: v1-dependencies-{{ checksum "pom.xml" }}
 
-        - run: |
-              curl -fsSL https://git.io/vpDIq | \
-                bash -s -- ${PUB_URL} ${ENC_PASS}
+        - run: mvn package
 
-        - run: |
-              curl -fsSL https://git.io/vpDIq | \
-                bash -s -- ${PRV_URL} ${ENC_PASS}
+       # - run: |
+       #       curl -fsSL https://git.io/vpDIq | \
+       #         bash -s -- ${PUB_URL} ${ENC_PASS}
 
-        - run: mvn -s .circleci.settings.xml deploy
+       # - run: |
+       #       curl -fsSL https://git.io/vpDIq | \
+       #         bash -s -- ${PRV_URL} ${ENC_PASS}
+
+       # - run: mvn -s .circleci.settings.xml deploy
