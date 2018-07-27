@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3.svg?style=svg)](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3)
 
+![QualityGate](https://sonarcloud.io/api/project_badges/measure?project=guru.springframework%3Aspring-cloud-contract-oa3&metric=alert_status)
 ## Open API 3.0 Converter
 
 The [OpenAPI Specification (OAS)](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) defines a

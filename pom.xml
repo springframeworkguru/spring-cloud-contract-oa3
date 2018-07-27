@@ -46,6 +46,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <sonar.sources>src/main/java,src/main/groovy</sonar.sources>
+        <sonar.tests>src/test/java,src/test/groovy</sonar.tests>
         <!--<spring-cloud-build.version>2.0.2.RELEASE</spring-cloud-build.version>-->
         <!--<spring-cloud-commons.version>2.0.0.BUILD-SNAPSHOT</spring-cloud-commons.version>-->
         <!--<spock-spring.version>1.0-groovy-2.4</spock-spring.version>-->
@@ -121,10 +123,10 @@
         <url>https://github.com/springframeworkguru/spring-cloud-contract-oa3/issues</url>
     </issueManagement>
 
-    <!--<ciManagement>-->
-    <!--<system>CircleCi</system>-->
-    <!--<url>https://circleci.com/gh/spring-cloud/spring-cloud-contract</url>-->
-    <!--</ciManagement>-->
+    <ciManagement>
+        <system>CircleCi</system>
+        <url>https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3</url>
+    </ciManagement>
 
     <build>
         <pluginManagement>
@@ -223,6 +225,16 @@
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.4.0.905</version>
             </plugin>
         </plugins>
     </build>
