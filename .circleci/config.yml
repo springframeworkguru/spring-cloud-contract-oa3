@@ -40,10 +40,7 @@ jobs:
               - ~/.m2
               key: v1-dependencies-{{ checksum "pom.xml" }}
 
-        - run:  mvn package sonar:sonar \
-                -Dsonar.organization=springframeworkguru-github \
-                -Dsonar.host.url=https://sonarcloud.io \
-                -Dsonar.login=${SONAR_PAS}
+        - run:  mvn package sonar:sonar -Dsonar.organization=springframeworkguru-github -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${SONAR_PAS}
 
        # - run: |
        #       curl -fsSL https://git.io/vpDIq | \
