@@ -11,7 +11,7 @@ class OpenApiContactConverterTest extends Specification {
 
     URL contractUrl = OpenApiContactConverterTest.getResource("/yml/contract.yml")
     File contractFile = new File(contractUrl.toURI())
-    URL contractOA3Url = OpenApiContactConverterTest.getResource("/yml/contract_OA3.yml")
+    URL contractOA3Url = OpenApiContactConverterTest.getResource("/openapi/contract_OA3.yml")
     File contractOA3File = new File(contractOA3Url.toURI())
 
     URL fruadApiUrl = OpenApiContactConverterTest.getResource("/openapi/openapi.yml")
