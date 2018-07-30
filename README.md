@@ -14,6 +14,13 @@ implementation logic.
 An OpenAPI definition can then be used by documentation generation tools to display the API, code generation tools to
 generate servers and clients in various programming languages, testing tools, and many other use cases.
 
+## Example Project
+A complete working example project using Open API 3.0 to define contracts for Spring Cloud Contract is available 
+[here on GitHub](https://github.com/springframeworkguru/sccoa3-fraud-example).
+
+This project is a copy of the fraud API example commonly used in the standalone examples. The above example implements 
+the same producer, client, and contracts (defined in YAML) from the [standalone YAML example](https://github.com/springframeworkguru/spring-cloud-contract/tree/master/samples/standalone/yml). 
+
 ## Usage
 
 ### Maven
