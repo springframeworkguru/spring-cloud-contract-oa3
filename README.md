@@ -1,5 +1,7 @@
 # Spring Cloud Contract Open API 3.0 Contract Converter
 
+[![Gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/spring-cloud-contract-oa3/Lobby)
+
 [![CircleCI](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3.svg?style=svg)](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3)
 
 ![QualityGate](https://sonarcloud.io/api/project_badges/measure?project=guru.springframework%3Aspring-cloud-contract-oa3&metric=alert_status)
