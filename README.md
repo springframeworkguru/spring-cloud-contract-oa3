@@ -60,7 +60,7 @@ The artifact also needs to be added to the Maven Plugin:
     </plugin>
 ```
 
-### Gradel
+### Gradle
 Coming soon... 
 
 ##  Defining Contracts in Open API
