@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
 
     <name>spring-cloud-contract-oa3</name>
-    <description>Spring Cloud Contract Open API 3.0</description>
+    <description>Spring Cloud Contract OpenAPI 3.0</description>
 
     <url>https://github.com/springframeworkguru/spring-cloud-contract-oa3</url>
 
