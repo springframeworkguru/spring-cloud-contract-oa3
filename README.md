@@ -21,7 +21,7 @@ A complete working example project using Open API 3.0 to define contracts for Sp
 [here on GitHub](https://github.com/springframeworkguru/sccoa3-fraud-example).
 
 This project is a copy of the fraud API example commonly used in the standalone examples. The above example implements 
-the same producer, client, and contracts (defined in YAML) from the [standalone YAML example](https://github.com/springframeworkguru/spring-cloud-contract/tree/master/samples/standalone/yml). 
+the same producer, client, and contracts (defined in YAML) from the [standalone YAML example](https://github.com/springframeworkguru/sccoa3-fraud-example). 
 
 ## Usage
 
@@ -60,7 +60,7 @@ The artifact also needs to be added to the Maven Plugin:
     </plugin>
 ```
 
-### Gradel
+### Gradle
 Coming soon... 
 
 ##  Defining Contracts in Open API
