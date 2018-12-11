@@ -1,9 +1,9 @@
 package org.springframework.cloud.contract.verifier.spec.openapi
 
 import groovy.util.logging.Slf4j
-import io.swagger.oas.models.PathItem
-import io.swagger.oas.models.media.MediaType
-import io.swagger.parser.v3.OpenAPIV3Parser
+import io.swagger.v3.oas.models.PathItem
+import io.swagger.v3.oas.models.media.MediaType
+import io.swagger.v3.parser.OpenAPIV3Parser
 import org.apache.commons.lang3.StringUtils
 import org.springframework.cloud.contract.spec.Contract
 import org.springframework.cloud.contract.spec.ContractConverter

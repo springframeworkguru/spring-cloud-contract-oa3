@@ -64,7 +64,7 @@ class OpenApiContactConverterTest extends Specification {
 
     def "ConvertFrom - should not go boom"() {
         given:
-        File file = new File('src/test/resources/openapi/openapi.yaml')
+        File file = new File('src/test/resources/openapi/openapi.yml')
         when:
 
         def result = contactConverter.convertFrom(file)
