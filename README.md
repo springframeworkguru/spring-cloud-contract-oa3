@@ -1,11 +1,11 @@
-# Spring Cloud Contract Open API 3.0 Contract Converter
+# Spring Cloud Contract OpenAPI 3.0 Contract Converter
 
 [![Gitter chat](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/spring-cloud-contract-oa3/Lobby)
 
 [![CircleCI](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3.svg?style=svg)](https://circleci.com/gh/springframeworkguru/spring-cloud-contract-oa3)
 
 ![QualityGate](https://sonarcloud.io/api/project_badges/measure?project=guru.springframework%3Aspring-cloud-contract-oa3&metric=alert_status)
-## Open API 3.0 Converter
+## OpenAPI 3.0 Converter
 
 The [OpenAPI Specification (OAS)](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md) defines a
 standard, language-agnostic interface to RESTful APIs which allows both humans and computers to discover and understand 
@@ -63,21 +63,21 @@ The artifact also needs to be added to the Maven Plugin:
 ### Gradle
 Coming soon... 
 
-##  Defining Contracts in Open API
+##  Defining Contracts in OpenAPI
 
-Natively, Open API does a great job of describing an API in a holistic manner.
+Natively, OpenAPI does a great job of describing an API in a holistic manner.
 
-Open API, however, does not define API interactions. Within the native Open API specification, it is not possible to
+OpenAPI, however, does not define API interactions. Within the native OpenAPI specification, it is not possible to
 define request / response pairs. To define a contract, you need to define the API and the specific details of a
 request, and the expected response.
 
 The Open API Specification defines a number of extension points in the API. These extension points may be used to
 define details about request / response pairs.
 
-Complete details of Open API 3.x extensions can be
+Complete details of OpenAPI 3.x extensions can be
 found [here](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#specificationExtensions).
 
-In general, most Open API schema objects may be extended using objects using a property with starts with 'x-'. The extension
+In general, most OpenAPI schema objects may be extended using objects using a property with starts with 'x-'. The extension
 property is an object, which provides the necessary flexibility to define interactions.
 
 The below snippet shows the definition of two contracts by extending the
@@ -466,4 +466,4 @@ These features should work with the OA3 DSL by using the same YAML syntax.
 
 # License
 
-The Spring Cloud Contract Open API 3.0 Contract Converter is released under version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
+The Spring Cloud Contract OpenAPI 3.0 Contract Converter is released under version 2.0 of the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
