@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 import io.swagger.oas.models.PathItem
 import io.swagger.oas.models.media.MediaType
 import io.swagger.parser.v3.OpenAPIV3Parser
+import org.apache.commons.lang3.StringUtils
 import org.springframework.cloud.contract.spec.Contract
 import org.springframework.cloud.contract.spec.ContractConverter
 import org.springframework.cloud.contract.spec.internal.DslProperty
@@ -74,6 +75,8 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
 
                         def contractId = openApiContract.contractId
 
+                        def contractPath = (StringUtils.isEmpty(openApiContract.contractPath)) ? path : openApiContract.contractPath
+
                         sccContracts.add(
                                 Contract.make {
                                     name = openApiContract?.name
@@ -87,6 +90,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                     }
 
                                     request {
+                                        //set method
                                         if (pathItem?.get?.is(operation)) {
                                             method("GET")
                                         } else if (pathItem?.put.is(operation)) {
@@ -99,7 +103,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                             method("PATCH")
                                         }
                                         if (operation?.parameters) {
-                                            url(path) {
+                                            url(contractPath) {
                                                 queryParameters {
                                                     operation?.parameters?.each { openApiParam ->
                                                         openApiParam?.extensions?."x-contracts".each { contractParam ->
@@ -123,7 +127,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                                 }
                                             }
                                         } else {
-                                            url(path)
+                                            url(contractPath)
                                         }
                                         headers {
                                             if (openApiContract?.requestHeaders) {

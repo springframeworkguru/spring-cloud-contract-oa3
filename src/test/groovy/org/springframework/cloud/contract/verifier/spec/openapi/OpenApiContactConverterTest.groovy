@@ -14,6 +14,9 @@ class OpenApiContactConverterTest extends Specification {
     URL contractOA3Url = OpenApiContactConverterTest.getResource("/openapi/contract_OA3.yml")
     File contractOA3File = new File(contractOA3Url.toURI())
 
+    URL contractOA3UrlPath = OpenApiContactConverterTest.getResource("/openapi/contract_OA3_contractPath.yml")
+    File contractOA3FilePath = new File(contractOA3UrlPath.toURI())
+
     URL fruadApiUrl = OpenApiContactConverterTest.getResource("/openapi/openapi.yml")
     File fraudApiFile = new File(fruadApiUrl.toURI())
 
@@ -110,5 +113,17 @@ class OpenApiContactConverterTest extends Specification {
         contract
         oa3Contract.size() == 6
 
+    }
+
+    def "Test parse of test path"() {
+        given:
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(contractOA3FilePath)
+
+        when:
+        Contract contract = oa3Contract.getAt(0)
+
+        then:
+        contract
+        contract.getRequest().url.clientValue.equals("/foo1")
     }
 }
