@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>guru.springframework</groupId>
@@ -40,6 +41,8 @@
         <java.version>1.8</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <sonar.sources>src/main/java,src/main/groovy</sonar.sources>
+        <sonar.tests>src/test/java,src/test/groovy</sonar.tests>
         <spring.cloud.contract.version>2.0.2.RELEASE</spring.cloud.contract.version>
         <spring-cloud-commons.version>2.0.2.RELEASE</spring-cloud-commons.version>
         <spock-spring.version>1.0-groovy-2.4</spock-spring.version>
@@ -233,6 +236,11 @@
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.5.0.1254</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
