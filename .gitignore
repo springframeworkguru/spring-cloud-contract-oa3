@@ -69,6 +69,7 @@ local.properties
 ######################
 /log/
 /target/
+.flattened-pom.xml
 
 ######################
 # Gradle
