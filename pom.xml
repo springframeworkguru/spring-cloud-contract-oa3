@@ -218,15 +218,10 @@
                 </executions>
                 <dependencies>
                     <dependency>
-                        <groupId>com.bluetrainsoftware.maven</groupId>
-                        <artifactId>groovydoc-maven-plugin</artifactId>
-                        <version>2.1</version>
-                        <exclusions>
-                            <exclusion>
-                                <groupId>org.codehaus.groovy</groupId>
-                                <artifactId>groovy-all</artifactId>
-                            </exclusion>
-                        </exclusions>
+                        <groupId>org.codehaus.groovy</groupId>
+                        <artifactId>groovy-all</artifactId>
+                        <version>[2.4.12]</version>
+                        <optional>true</optional>
                     </dependency>
                 </dependencies>
             </plugin>
