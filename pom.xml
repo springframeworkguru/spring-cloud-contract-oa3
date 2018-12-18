@@ -48,18 +48,6 @@
         <groovy.version>2.4.15</groovy.version>
     </properties>
 
-    <!--<dependencyManagement>-->
-        <!--<dependencies>-->
-            <!--<dependency>-->
-                <!--<groupId>org.springframework.cloud</groupId>-->
-                <!--<artifactId>spring-cloud-contract-dependencies</artifactId>-->
-                <!--<version>${spring.cloud.contract.version}</version>-->
-                <!--<type>pom</type>-->
-                <!--<scope>import</scope>-->
-            <!--</dependency>-->
-        <!--</dependencies>-->
-    <!--</dependencyManagement>-->
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
