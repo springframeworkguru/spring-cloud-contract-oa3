@@ -45,6 +45,7 @@
         <spring.cloud.contract.version>2.0.2.RELEASE</spring.cloud.contract.version>
         <spock-spring.version>1.0-groovy-2.4</spock-spring.version>
         <spock-global-unroll.version>0.5.1</spock-global-unroll.version>
+        <groovy.version>2.4.15</groovy.version>
     </properties>
 
     <dependencyManagement>
@@ -219,6 +220,7 @@
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-all</artifactId>
+                        <version>${groovy.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>
