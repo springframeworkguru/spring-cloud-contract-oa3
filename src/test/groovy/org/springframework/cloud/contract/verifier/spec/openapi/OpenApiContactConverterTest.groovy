@@ -20,6 +20,12 @@ class OpenApiContactConverterTest extends Specification {
     URL fruadApiUrl = OpenApiContactConverterTest.getResource("/openapi/openapi.yml")
     File fraudApiFile = new File(fruadApiUrl.toURI())
 
+    URL payorApiUrl = OpenApiContactConverterTest.getResource("/openapi/payor_example.yml")
+    File payorApiFile = new File(payorApiUrl.toURI())
+
+    URL veloApiUrl = OpenApiContactConverterTest.getResource("/openapi/velooa3.yaml")
+    File veloApiFile = new File(veloApiUrl.toURI())
+
     OpenApiContractConverter contactConverter
     YamlContractConverter yamlContractConverter
 
@@ -126,4 +132,32 @@ class OpenApiContactConverterTest extends Specification {
         contract
         contract.getRequest().url.clientValue.equals("/foo1")
     }
+
+    def "Test Parse of Payor example contracts"() {
+
+        given:
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(payorApiFile)
+
+        when:
+        Contract contract = oa3Contract.getAt(0)
+
+        then:
+        contract
+    }
+
+    def "Test Parse of Velo Contracts"() {
+
+        given:
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(payorApiFile)
+        Collection<Contract> veloContracts = contactConverter.convertFrom(veloApiFile)
+
+        when:
+        Contract contract = oa3Contract.getAt(0)
+        Contract veloContract = veloContracts.getAt(0)
+
+        then:
+        contract
+        contactConverter.isAccepted(veloApiFile)
+    }
+
 }

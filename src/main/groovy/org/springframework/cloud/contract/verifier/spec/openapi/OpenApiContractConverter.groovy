@@ -47,7 +47,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                     v.readOperations().each { operation ->
                         if (operation.extensions) {
                             def contracts = operation.extensions."x-contracts"
-                            if (contracts.size > 0) {
+                            if (contracts != null && contracts.size > 0) {
                                 contractsFound = true
                             }
                         }
@@ -57,7 +57,8 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
 
             return contractsFound
         } catch (Exception e) {
-            log.debug(e.message)
+            log.error("Unexpected error in reading contract file")
+            log.error(e.message)
             return false
         }
     }
@@ -79,6 +80,12 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
 
                         sccContracts.add(
                                 Contract.make {
+                                    if (openApiContract?.name != null) {
+                                        log.info("Creating Contract for: " + openApiContract?.name)
+                                    }
+
+                                    println "Creating Contract for: " + openApiContract?.name
+
                                     name = openApiContract?.name
                                     description = openApiContract?.description
                                     priority = openApiContract?.priority

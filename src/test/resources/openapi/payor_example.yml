@@ -1,0 +1,219 @@
+openapi: "3.0.0"
+info:
+    description: SFG Payor Service
+    version: "1.0.0"
+    title: Payor Service
+paths:
+    /v1/payors/{payorId}:
+        get:
+            summary: Get Payor Details by ID
+            description: |
+                This API operation provide you the account balance of the given payor id.
+            operationId: getPayor
+            tags:
+                - Payor Service
+            parameters:
+                -   name: payorId
+                    in: path
+                    description: The account owner Payor ID
+                    required: true
+                    schema:
+                        type: string
+                        format: uuid
+            x-code-samples:
+                -   lang: 'shell'
+                    source: |
+                        $ curl 'https://api.sandbox.velopayments.com/v1/payors/a3c35f60-c94e-418d-bb5b-00174d93a6eb' -i \
+                            -H 'Content-Type: application/json' \
+                            -H 'Authorization: Bearer 40a61fcb-2a1a-454b-b049-01487986873e'
+            x-contracts:
+                - contractId: 1
+                  name: Test Good Response
+                  contractPath: "/v1/payors/0a818933-087d-47f2-ad83-2f986ed087eb"
+                - contractId: 2
+                  name: Test Not Found
+                  contractPath: "/v1/payors/00000000-0000-0000-0000-000000000000"
+                - contractId: 3
+                  name: Test Bad Schema
+                  contractPath: "/v1/payors/16ea5c75-1476-4651-b117-bcb33d77f2b5"
+            responses:
+                '200':
+                    description: Get Payor Details
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                required:
+                                    - payorId
+                                    - payorName
+                                    - address
+                                    - primaryContactName
+                                    - primaryContactPhone
+                                    - primaryContactEmail
+                                    - language
+                                properties:
+                                    payorId:
+                                        type: string
+                                        format: uuid
+                                    payorName:
+                                        type: string
+                                    address:
+                                        type: object
+                                        required:
+                                            - line1
+                                            - city
+                                            - zipOrPostcode
+                                            - country
+                                        properties:
+                                            line1:
+                                                type: string
+                                                minLength: 2
+                                                maxLength: 255
+                                            line2:
+                                                type: string
+                                                minLength: 0
+                                                maxLength: 255
+                                            line3:
+                                                type: string
+                                                minLength: 0
+                                                maxLength: 255
+                                            line4:
+                                                type: string
+                                                minLength: 0
+                                                maxLength: 255
+                                            city:
+                                                type: string
+                                                minLength: 2
+                                                maxLength: 100
+                                            countyOrProvince:
+                                                type: string
+                                                minLength: 2
+                                                maxLength: 100
+                                            zipOrPostcode:
+                                                type: string
+                                                minLength: 2
+                                                maxLength: 30
+                                            country:
+                                                type: string
+                                                minLength: 2
+                                                maxLength: 50
+                                    primaryContactName:
+                                        type: string
+                                        description: Name of primary contact for the payor.
+                                    primaryContactPhone:
+                                        type: string
+                                        description: Primary contact phone number for the payor.
+                                    primaryContactEmail:
+                                        type: string
+                                        format: email
+                                        description: Primary contact email for the payor.
+                                    fundingAccountRoutingNumber:
+                                        type: string
+                                        description: The funding account routing number to be used for the payor.
+                                    fundingAccountAccountNumber:
+                                        type: string
+                                        description: The funding account number to be used for the payor.
+                                    fundingAccountAccountName:
+                                        type: string
+                                        description: The funding account name to be used for the payor.
+                                    kycState:
+                                        type: string
+                                        description: The kyc state of the payor.
+                                        enum: [FAILED_KYC, PASSED_KYC, REQUIRES_KYC]
+                                    manualLockout:
+                                        type: boolean
+                                        description: Whether or not the payor has been manually locked by the backoffice.
+                                    payeeGracePeriodProcessingEnabled:
+                                        type: boolean
+                                        description: Whether grace period processing is enabled.
+                                    payeeGracePeriodDays:
+                                        type: integer
+                                        description: The grace period for paying payees in days.
+                                    collectiveAlias:
+                                        type: string
+                                        description: How the payor has chosen to refer to payees.
+                                    supportContact:
+                                        type: string
+                                        description: The payor’s support contact address.
+                                    dbaName:
+                                        type: string
+                                        description: The payor’s 'Doing Business As' name.
+                                    allowsLanguageChoice:
+                                        type: boolean
+                                        description: Whether or not the payor allows language choice in the UI.
+                                    reminderEmailsOptOut:
+                                        type: boolean
+                                        description: Whether or not the payor has opted-out of reminder emails being sent.
+                                    language:
+                                        type: string
+                                        description: The payor’s language preference. Must be one of [EN, FR].
+                                        enum: [EN, FR]
+                                    includesReports:
+                                        type: boolean
+                    x-contracts:
+                        - contractId: 1
+                          body:
+                              payorId: "0a818933-087d-47f2-ad83-2f986ed087eb"
+                '404':
+                    description: Payor Id Not Found
+                    x-contracts:
+                        - contractId: 2
+                '500':
+                    description: Server Error
+                    x-contracts:
+                        -   contractId: 3
+                            body:
+                                payorId: "0a818933-087d-47f2-ad83-2f986ed087eb"
+    /v1/payors/{payorId}/applications:
+        post:
+            summary: Create application
+            operationId: createPayorApplication
+            tags:
+                - Payor Service
+            parameters:
+                -   name: Content-Type
+                    in: header
+                    description: Content Type
+                    required: true
+                    schema:
+                        type: string
+                -   name: payorId
+                    in: path
+                    description: The account owner Payor ID
+                    required: true
+                    schema:
+                        type: string
+                        format: uuid
+            x-contracts:
+                - contractId: 1
+                  name: Test Create Application
+                  contractPath: "/v1/payors/835ac62e-616c-4261-bf38-63366db78c0d/applications"
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                description:
+                                    type: string
+                x-contracts:
+                    - contractId: 1
+                      body:
+                          name: 'foo'
+                          description: "a foo application"
+            responses:
+                '201':
+                    description: Success
+                    headers:
+                        'Location':
+                            description: location
+                            schema:
+                                type: string
+                    x-contracts:
+                        - contractId: 1
+                          mathers:
+                              headers:
+                                  - key: Location
+                                    predefined: non_empty
