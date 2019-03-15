@@ -19,42 +19,42 @@ paths:
                       type: string
                   x-contracts:
                       - contractId: 1
-                        default: b
+                        value: b
                 - name: b
                   in: query
                   schema:
                       type: string
                   x-contracts:
                       - contractId: 1
-                        default: c
+                        value: c
                 - name: foo
                   in: header
                   schema:
                       type: string
                   x-contracts:
                       - contractId: 1
-                        default: bar
+                        value: bar
                 - name: fooReq
                   in: header
                   schema:
                       type: string
                   x-contracts:
                       - contractId: 1
-                        default: baz
+                        value: baz
                 - name: foo
                   in: cookie
                   schema:
                       type: string
                   x-contracts:
                       - contractId: 1
-                        default: bar
+                        value: bar
                 - name: fooReq
                   in: cookie
                   schema:
                       type: string
                   x-contracts:
                       - contractId: 1
-                        default: baz
+                        value: baz
             requestBody:
                 content:
                     application/json:

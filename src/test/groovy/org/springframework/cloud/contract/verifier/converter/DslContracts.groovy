@@ -1,4 +1,4 @@
-package org.springframework.cloud.contract.verifier.spec.openapi
+package org.springframework.cloud.contract.verifier.converter
 
 import org.springframework.cloud.contract.spec.Contract
 

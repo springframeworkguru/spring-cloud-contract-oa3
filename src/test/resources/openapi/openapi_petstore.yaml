@@ -34,9 +34,9 @@ paths:
           # Define Parameters for Contracts
           x-contracts:
             - contractId: 1
-              default: null
+              value: null
             - contractId: 2
-              default: 5
+              value: 5
       responses:
         '200':
           description: An paged array of pets

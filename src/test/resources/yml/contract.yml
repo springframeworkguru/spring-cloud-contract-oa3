@@ -59,7 +59,7 @@ response:
   body:
     foo2: bar
     foo3: baz
-    nullValue: null
+    nullValue: thisisnull
   matchers:
     body:
       - path: $.foo2

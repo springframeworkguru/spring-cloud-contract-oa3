@@ -24,21 +24,25 @@ This project is a copy of the fraud API example commonly used in the standalone 
 the same producer, client, and contracts (defined in YAML) from the [standalone YAML example](https://github.com/springframeworkguru/sccoa3-fraud-example). 
 
 ## Usage
-
 ### Maven
-To enable this plugin, you will need to add the OA3 converter jar to your project as follows:
+To enable this plugin, you will need to add the OA3 converter jar to your Spring Boot project as follows.
 
-Add to your maven dependencies: 
+1. Configure your project to use [Spring Cloud Contract](https://cloud.spring.io/spring-cloud-static/spring-cloud-contract/2.1.0.RELEASE/single/spring-cloud-contract.html#maven-project).
 
-```xml
+2. Add to your maven dependencies: 
+    ```xml
     <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-contract-verifier</artifactId>
         <scope>test</scope>
     </dependency>
-```
-
-The artifact also needs to be added to the Maven Plugin:
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    ```
+3. The artifact also needs to be added to the Maven Plugin:
 
 ```xml
     <plugin>
@@ -59,9 +63,6 @@ The artifact also needs to be added to the Maven Plugin:
         </dependencies>
     </plugin>
 ```
-
-### Gradle
-Coming soon... 
 
 ##  Defining Contracts in OpenAPI
 
@@ -123,6 +124,619 @@ body for interaction.
 
 * [Response Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responseObject) - Define
 expected response for given interaction.
+
+### OA3 Extensions for Spring Cloud Contract
+Under the covers, the converter is converting from the OA3 object format, to the `YamlContract` object of Spring Cloud Contract.
+This is then converted to a `Contract` object using the same converter used by Spring Cloud Contract for it's 
+YAML DSL.
+
+The YAML DSL of Spring Cloud Contract is very robust. Please review the capabilities of the YAML DSL in the official 
+[Spring Cloud Contract documentation](https://cloud.spring.io/spring-cloud-contract/multi/multi__contract_dsl.html#_common_top_level_elements).
+
+As much as practical, the object properties and names follow the YAML DSL of Spring Cloud Contract. 
+#### Operation Object Extension
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "x-contracts": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "contractId": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "priority": {
+              "type": "integer"
+            },
+            "ignored": {
+              "type": "boolean"
+            },
+            "contractPath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contractId",
+            "name",
+            "description",
+            "label",
+            "priority",
+            "ignored",
+            "contractPath"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "contractId": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            },
+            "priority": {
+              "type": "integer"
+            },
+            "contractPath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "contractId",
+            "description"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "x-contracts"
+  ]
+}
+```
+#### Parameter Object Extension
+Note: Query Parameters maybe defined on the Parameter object, or within the parameter element of the Request Body extension.
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "x-contracts": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "contractId": {
+              "type": "integer"
+            },
+            "value": {
+              "type": "string"
+            },
+            "matchers": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": []
+                }
+              ]
+            }
+          },
+          "required": [
+            "contractId",
+            "value"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "x-contracts"
+  ]
+}
+```
+#### Request Body Extension
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "x-contracts": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "contractId": {
+              "type": "integer"
+            },
+            "request": {
+              "type": "object",
+              "properties": {
+                "queryParameters": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": []
+            },
+            "headers": {
+              "type": "object",
+              "properties": {
+                "Header-key": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "Header-key"
+              ]
+            },
+            "body": {
+              "type": "object"
+            },
+            "multipart": {
+              "type": "object",
+                "named": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "paramName": {
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "type": "string"
+                        },
+                        "fileContent": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "paramName",
+                        "fileName",
+                        "fileContent"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "params",
+                "named"
+              ]
+            },
+            "matchers": {
+              "type": "object",
+              "properties": {
+                "headers": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "regex": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        },
+                        "command": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "body": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        },
+                        "minOccurrence": {
+                          "type": "integer"
+                        },
+                        "maxOccurrence": {
+                          "type": "integer"
+                        },
+                        "regexType": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "queryParameters": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "cookies": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "regex": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        },
+                        "command": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "regex",
+                        "predefined",
+                        "command",
+                        "type"
+                      ]
+                    }
+                  ]
+                },
+                "multipart": {
+                  "type": "object",
+                  "properties": {
+                    "params": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            },
+                            "regex": {
+                              "type": "string"
+                            },
+                            "predefined": {
+                              "type": "string"
+                            },
+                            "command": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    },
+                    "named": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "paramName": {
+                              "type": "string"
+                            },
+                            "fileName": {
+                              "type": "object",
+                              "properties": {
+                                "regex": {
+                                  "type": "string"
+                                },
+                                "perfefined": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": []
+                            },
+                            "fileContent": {
+                              "type": "object",
+                              "properties": {
+                                "regex": {
+                                  "type": "string"
+                                },
+                                "perfefined": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [ ]
+                            },
+                            "contentType": {
+                              "type": "object",
+                              "properties": {
+                                "regex": {
+                                  "type": "string"
+                                },
+                                "perfefined": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [ ]
+                            }
+                          },
+                          "required": []
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "params",
+                    "named"
+                  ]
+                }
+              },
+              "required": []
+            }
+          },
+          "required": []
+        }
+      ]
+    }
+  },
+  "required": [
+    "x-contracts"
+  ]
+}
+```
+
+#### Response Object Extension
+```json
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "x-contracts": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "contractId": {
+              "type": "integer"
+            },
+            "headers": {
+              "type": "object",
+              "properties": {
+                "HeaderKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "HeaderKey"
+              ]
+            },
+            "body": {
+              "type": "object"
+            },
+            "cookies": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key"
+              ]
+            },
+            "assyc": {
+              "type": "boolean"
+            },
+            "fixedDelayMilliseconds": {
+              "type": "integer"
+            },
+            "matchers": {
+              "type": "object",
+              "properties": {
+                "headers": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "regex": {
+                          "type": "string"
+                        },
+                        "command": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        },
+                        "regexType": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "body": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "path": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "predefined": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        },
+                        "minOccurrence": {
+                          "type": "integer"
+                        },
+                        "maxOccurrence": {
+                          "type": "integer"
+                        },
+                        "regexType": {
+                          "type": "string"
+                        }
+                      },
+                      "required": []
+                    }
+                  ]
+                },
+                "cookies": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string"
+                    },
+                    "regex": {
+                      "type": "string"
+                    },
+                    "command": {
+                      "type": "string"
+                    },
+                    "predefined": {
+                      "type": "string"
+                    },
+                    "regexType": {
+                      "type": "string"
+                    }
+                  },
+                  "required": []
+                }
+              },
+              "required": []
+            }
+          },
+          "required": [
+            "contractId"]
+        }
+      ]
+    }
+  },
+  "required": [
+    "x-contracts"
+  ]
+}
+```
 
 ### Example Contract Definition
 
@@ -363,42 +977,42 @@ paths:
                 type: string
             x-contracts:
                 - contractId: 1
-                  default: b
+                  value: b
           - name: b
             in: query
             schema:
                 type: string
             x-contracts:
                 - contractId: 1
-                  default: c
+                  value: c
           - name: foo
             in: header
             schema:
                 type: string
             x-contracts:
                 - contractId: 1
-                  default: bar
+                  value: bar
           - name: fooReq
             in: header
             schema:
                 type: string
             x-contracts:
                 - contractId: 1
-                  default: baz
+                  value: baz
           - name: foo
             in: cookie
             schema:
               type: string
             x-contracts:
                 - contractId: 1
-                  default: bar
+                  value: bar
           - name: fooReq
             in: cookie
             schema:
               type: string
             x-contracts:
                 - contractId: 1
-                  default: baz
+                  value: baz
         requestBody:
             content:
                 application/json:
@@ -461,7 +1075,7 @@ paths:
 ```
 
 ### OA3 YAML Syntax
-The YAML DSL for Spring Cloud Contract defines a number of advanced features (regx, matchers, json path, etc).
+The [YAML DSL for Spring Cloud Contract](https://cloud.spring.io/spring-cloud-contract/multi/multi__contract_dsl.html#contract-matchers) defines a number of advanced features (regx, matchers, json path, etc).
 These features should work with the OA3 DSL by using the same YAML syntax.
 
 # License

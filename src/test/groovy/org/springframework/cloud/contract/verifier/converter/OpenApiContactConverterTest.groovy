@@ -1,7 +1,6 @@
-package org.springframework.cloud.contract.verifier.spec.openapi
+package org.springframework.cloud.contract.verifier.converter
 
 import org.springframework.cloud.contract.spec.Contract
-import org.springframework.cloud.contract.verifier.converter.YamlContractConverter
 import spock.lang.Specification
 
 /**
@@ -104,6 +103,7 @@ class OpenApiContactConverterTest extends Specification {
         yamlContract.response.status == openApiContract.response.status
         yamlContract.response.headers == openApiContract.response.headers
         yamlContract.response.bodyMatchers == openApiContract.response.bodyMatchers
+        yamlContract.response.body == openApiContract.response.body
         yamlContract == openApiContract
 
     }
@@ -148,15 +148,15 @@ class OpenApiContactConverterTest extends Specification {
     def "Test Parse of Velo Contracts"() {
 
         given:
-        Collection<Contract> oa3Contract = contactConverter.convertFrom(payorApiFile)
+       // Collection<Contract> oa3Contract = contactConverter.convertFrom(payorApiFile)
         Collection<Contract> veloContracts = contactConverter.convertFrom(veloApiFile)
 
         when:
-        Contract contract = oa3Contract.getAt(0)
+        //Contract contract = oa3Contract.getAt(0)
         Contract veloContract = veloContracts.getAt(0)
 
         then:
-        contract
+        //contract
         contactConverter.isAccepted(veloApiFile)
     }
 
