@@ -25,6 +25,12 @@ class OpenApiContactConverterTest extends Specification {
     URL veloApiUrl = OpenApiContactConverterTest.getResource("/openapi/velooa3.yaml")
     File veloApiFile = new File(veloApiUrl.toURI())
 
+    URL matcherUrl = OpenApiContactConverterTest.getResource("/yml/contract_matchers.yml")
+    File matcherFile = new File(matcherUrl.toURI())
+
+    URL matcherUrlOA3 = OpenApiContactConverterTest.getResource("/openapi/contract_matchers.yml")
+    File matcherFileOA3 = new File(matcherUrlOA3.toURI())
+
     OpenApiContractConverter contactConverter
     YamlContractConverter yamlContractConverter
 
@@ -148,7 +154,6 @@ class OpenApiContactConverterTest extends Specification {
     def "Test Parse of Velo Contracts"() {
 
         given:
-       // Collection<Contract> oa3Contract = contactConverter.convertFrom(payorApiFile)
         Collection<Contract> veloContracts = contactConverter.convertFrom(veloApiFile)
 
         when:
@@ -158,6 +163,32 @@ class OpenApiContactConverterTest extends Specification {
         then:
         //contract
         contactConverter.isAccepted(veloApiFile)
+    }
+
+    def "Test Parse of Matchers"() {
+
+        given:
+        Contract yamlContract = yamlContractConverter.convertFrom(matcherFile).first()
+        Collection<Contract> matcherContracts = contactConverter.convertFrom(matcherFileOA3)
+
+        when:
+
+        Contract openApiContract = matcherContracts.getAt(0)
+
+        then:
+        //contract
+        contactConverter.isAccepted(matcherFileOA3)
+       // yamlContract.request.url == openApiContract.request.url
+        yamlContract.request.method == openApiContract.request.method
+        yamlContract.request.cookies == openApiContract.request.cookies
+        yamlContract.request.headers == openApiContract.request.headers
+        yamlContract.request.body == openApiContract.request.body  // has empty list, which does not convert
+        yamlContract.request.bodyMatchers == openApiContract.request.bodyMatchers
+        yamlContract.response.status == openApiContract.response.status
+        yamlContract.response.headers == openApiContract.response.headers
+        yamlContract.response.bodyMatchers == openApiContract.response.bodyMatchers
+        yamlContract.response.body == openApiContract.response.body // has empty list, which does not convert
+
     }
 
 }

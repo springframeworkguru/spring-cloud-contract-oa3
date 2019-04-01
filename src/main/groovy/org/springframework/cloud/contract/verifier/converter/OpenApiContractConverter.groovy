@@ -160,10 +160,16 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
 
                         if (operation?.requestBody?.extensions?."x-contracts") {
                             operation?.requestBody?.extensions?."x-contracts"?.each { contractBody ->
-                                if (contractBody.contractId == contractId) {
+                                if (contractBody?.contractId == contractId) {
 
                                     contractBody?.headers?.each {k, v ->
                                         yamlContract.request.headers.put(k, v)
+                                    }
+
+                                    if(contractBody?.cookies) {
+                                        contractBody?.cookies?.each {cookieVal ->
+                                            yamlContract.request.cookies.put(cookieVal.key, cookieVal.value)
+                                        }
                                     }
 
                                     yamlContract.request.body = contractBody?.body
@@ -191,28 +197,40 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                         }
                                     }
 
-                                    contractBody.matchers?.body?.each { matcher ->
+                                    if(contractBody.matchers?.url){
+                                        YamlContract.KeyValueMatcher keyValueMatcher = new YamlContract.KeyValueMatcher()
+                                        keyValueMatcher.key = contractBody.matchers?.url?.key
+                                        keyValueMatcher.regex = contractBody.matchers?.url?.regex
+                                        keyValueMatcher.predefined = contractBody.matchers?.url?.predefined
+                                        keyValueMatcher.command = contractBody.matchers?.url?.command
+                                        keyValueMatcher.regexType = contractBody.matchers?.url?.regexType
+
+                                        yamlContract.request.matchers.url = keyValueMatcher
+                                    }
+
+                                    contractBody.matchers?.queryParameters?.each { matcher ->
+                                        YamlContract.QueryParameterMatcher queryParameterMatcher = new YamlContract.QueryParameterMatcher()
+                                        queryParameterMatcher.key = matcher.key
+                                        queryParameterMatcher.value = matcher.value
+                                        queryParameterMatcher.type = getMatchingTypeFromString(matcher?.type)
+
+                                        yamlContract.request.matchers.queryParameters.add(queryParameterMatcher)
+                                    }
+
+                                    contractBody.matchers?.body?.each { bodyMatcher ->
                                         YamlContract.BodyStubMatcher bodyStubMatcher = new YamlContract.BodyStubMatcher()
-                                        bodyStubMatcher.path = matcher?.path
-                                        bodyStubMatcher.value = matcher.value
+                                        bodyStubMatcher.path = bodyMatcher?.path
+                                        bodyStubMatcher.value = bodyMatcher.value
 
                                         try {
-                                            if (StringUtils.isNotEmpty(matcher.type)) {
-                                                bodyStubMatcher.type = YamlContract.StubMatcherType.valueOf(matcher.type)
+                                            if (StringUtils.isNotEmpty(bodyMatcher.type)) {
+                                                bodyStubMatcher.type = YamlContract.StubMatcherType.valueOf(bodyMatcher.type)
                                             }
 
-                                            bodyStubMatcher.predefined = getPredefinedRegexFromString(matcher.predefined)
-
-
-                                            if(StringUtils.isNotEmpty(matcher.minOccurence) && StringUtils.isNumeric(matcher.minOccurence)){
-                                                bodyStubMatcher.minOccurrence = matcher?.minOccurence
-                                            }
-
-                                            if (StringUtils.isNotEmpty(matcher.maxOccurrence) && StringUtils.isNumeric(matcher.maxOccurrence)) {
-                                                bodyStubMatcher.maxOccurrence = matcher?.maxOccurrence
-                                            }
-
-                                            bodyStubMatcher.regexType = getRegexTypeFromString(matcher.regexType)
+                                            bodyStubMatcher.predefined = getPredefinedRegexFromString(bodyMatcher.predefined)
+                                            bodyStubMatcher.minOccurrence = bodyMatcher?.minOccurrence
+                                            bodyStubMatcher.maxOccurrence = bodyMatcher?.maxOccurrence
+                                            bodyStubMatcher.regexType = getRegexTypeFromString(bodyMatcher.regexType)
 
                                         } catch (Exception e){
                                             log.error("Error parsing body matcher in request", e)
@@ -225,16 +243,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                         yamlContract.request.matchers.headers.add(buildKeyValueMatcher(matcher))
                                     }
 
-                                    contractBody.matchers?.queryParameters?.each { matcher ->
-                                        YamlContract.QueryParameterMatcher queryParameterMatcher = new YamlContract.QueryParameterMatcher()
-                                        queryParameterMatcher.key = matcher.key
-                                        queryParameterMatcher.value = matcher.value
-                                        queryParameterMatcher.type = getMatchingTypeFromString(matcher?.type)
-
-                                        yamlContract.request.matchers.queryParameters.add(queryParameterMatcher)
-                                    }
-
-                                    contractBody.matchers?.queryParameters?.each { matcher ->
+                                    contractBody.matchers?.cookies?.each { matcher ->
                                         yamlContract.request.matchers.cookies.add(buildKeyValueMatcher(matcher))
                                     }
 
@@ -292,6 +301,9 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                             yamlContract.response.bodyFromFile = responseContract?.bodyFromFile
                                             yamlContract.response.bodyFromFileAsBytes = responseContract?.bodyFromFileAsBytes
 
+                                            responseContract.headers?.each {responseHeader ->
+                                                yamlContract.response.headers.put(responseHeader.key, responseHeader.value)
+                                            }
                                             //matchers
                                             responseContract?.matchers?.body?.each { matcher ->
                                                 YamlContract.BodyTestMatcher bodyTestMatcher = new YamlContract.BodyTestMatcher()
@@ -302,7 +314,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                                     if (StringUtils.isNotEmpty(matcher.type)){
                                                         bodyTestMatcher.type = YamlContract.TestMatcherType.valueOf(matcher.type)
                                                     }
-                                                    bodyTestMatcher.minOccurrence = matcher?.minOccurence
+                                                    bodyTestMatcher.minOccurrence = matcher?.minOccurrence
                                                     bodyTestMatcher.maxOccurrence = matcher?.maxOccurrence
                                                     bodyTestMatcher.predefined = getPredefinedRegexFromString(matcher.predefined)
                                                     bodyTestMatcher.regexType = getRegexTypeFromString(matcher.regexType)
@@ -360,7 +372,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                         File tempFile = File.createTempFile("sccoa3", ".yml")
 
                         ObjectMapper mapper = new ObjectMapper(new YAMLFactory().disable(YAMLGenerator.Feature.SPLIT_LINES).enable(YAMLGenerator.Feature.LITERAL_BLOCK_STYLE))
-                        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+                        mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS)
                         mapper.writeValue(tempFile, yamlContract)
 
                         log.debug(tempFile.getAbsolutePath())

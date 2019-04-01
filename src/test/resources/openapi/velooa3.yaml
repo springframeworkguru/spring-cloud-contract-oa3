@@ -170,6 +170,28 @@ paths:
                             $ref: '#/components/schemas/PayorFundingBankDetailsUpdate'
                 description: Update Funding bank details of given Payor Id
                 required: true
+                x-contracts:
+                    - contractId: 1
+                      headers:
+                          Content-Type: application/json
+                      body:
+                          routingNumber: "123456789"
+                          accountNumber: "12345"
+                          accountName: Robert C. Smith
+                      matchers:
+                          headers:
+                              - key: Content-Type
+                                regex: application/json.*
+                          body:
+                              - path: $.routingNumber
+                                type: by_regex
+                                predefined: non_empty
+                              - path: $.accountNumber
+                                type: by_regex
+                                predefined: non_empty
+                              - path: $.accountName
+                                type: by_regex
+                                predefined: non_empty
             responses:
                 202:
                     description: HTTP Accepted
@@ -216,6 +238,8 @@ paths:
                 required: true
                 x-contracts:
                     - contractId: 1
+                      headers:
+                          Content-Type: application/json
                       body:
                           name: foo
                           description: a foo application
@@ -253,6 +277,10 @@ paths:
             summary: Create Application
             tags:
                 - Payor Applications
+            x-contracts:
+                - contractId: 1
+                  name: Test Create Application
+                  contractPath: /v1/payors/835ac62e-616c-4261-bf38-63366db78c0d/applications
             x-code-samples:
                 - lang: shell
                   source: |
@@ -288,6 +316,8 @@ paths:
                 required: true
                 x-contracts:
                     - contractId: 4
+                      headers:
+                          Content-Type: application/json
                       body:
                           name: Key Name
                           description: A key description
@@ -348,6 +378,10 @@ paths:
             summary: Create API Key
             tags:
                 - Payor Applications
+            x-contracts:
+                - contractId: 4
+                  name: Create an API key for a payor
+                  contractPath: /v1/payors/0a818933-087d-47f2-ad83-2f986ed087eb/applications/ba08877f-9d96-41e4-9c26-44a872d856ae/keys
             x-code-samples:
                 - lang: shell
                   source: |
@@ -497,6 +531,20 @@ paths:
             summary: Get Branding
             tags:
                 - Payor Branding
+            x-contracts:
+                - contractId: 1
+                  name: Get Payor Branding Details
+                  description: Test to get branding details for payor
+                  label: Payor_Branding
+                  priority: 10
+                  ignored: false
+                  contractPath: /v1/payors/0a818933-087d-47f2-ad83-2f986ed087eb/branding
+                - contractId: 2
+                  name: Get Payor Brandding Details - not found
+                  description: Test to not found status returned by API
+                  label: Payor_Branding
+                  priority: 20
+                  contractPath: /v1/payors/00000000-0000-0000-0000-000000000000/branding
             x-code-samples:
                 - lang: shell
                   source: |
@@ -727,6 +775,15 @@ paths:
             summary: List Payees
             tags:
                 - Payees
+            x-contracts:
+                - contractId: 1
+                  name: Test List Payees
+                  request:
+                      queryParameters:
+                          - key: page
+                            value: 1
+                          - key: pageSize
+                            value: 30
             x-code-samples:
                 - lang: shell
                   source: |
