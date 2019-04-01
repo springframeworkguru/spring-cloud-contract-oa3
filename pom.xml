@@ -4,7 +4,7 @@
 
     <groupId>guru.springframework</groupId>
     <artifactId>spring-cloud-contract-oa3</artifactId>
-    <version>2.1.1.1-SNAPSHOT</version>
+    <version>2.1.1.1</version>
     <packaging>jar</packaging>
 
     <name>spring-cloud-contract-oa3</name>
@@ -113,7 +113,7 @@
         <developerConnection>scm:git:git@github.com:springframeworkguru/spring-cloud-contract-oa3.git
         </developerConnection>
         <url>https://github.com/springframeworkguru/spring-cloud-contract-oa3</url>
-        <tag>HEAD</tag>
+        <tag>v2.1.1.1</tag>
     </scm>
 
     <issueManagement>
