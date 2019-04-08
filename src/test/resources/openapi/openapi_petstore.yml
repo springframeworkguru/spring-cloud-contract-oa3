@@ -19,10 +19,12 @@ paths:
           name: Test List All Pets, No Limit
           requestHeaders:
             - Content-type: application/json
+          serviceName: serviceA
         - contractId: 2
           name: Test List All Pets, Limit 5
           requestHeaders:
             - Content-type: application/json
+          serviceName: serviceB
       parameters:
         - name: limit
           in: query
@@ -72,6 +74,7 @@ paths:
       x-contracts:
         - contractId: 1
           name: Test Create Pet
+          serviceName: serviceC
           requestHeaders:
             - Content-type: application/json
       requestBody:

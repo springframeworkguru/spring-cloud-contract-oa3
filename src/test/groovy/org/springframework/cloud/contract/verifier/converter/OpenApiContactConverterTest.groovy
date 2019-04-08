@@ -41,7 +41,7 @@ class OpenApiContactConverterTest extends Specification {
 
     def "IsAccepted True"() {
         given:
-        File file = new File('src/test/resources/openapi/openapi_petstore.yaml')
+        File file = new File('src/test/resources/openapi/openapi_petstore.yml')
         when:
 
         def result = contactConverter.isAccepted(file)
@@ -84,8 +84,6 @@ class OpenApiContactConverterTest extends Specification {
 
         then:
         result != null
-
-
     }
 
 
