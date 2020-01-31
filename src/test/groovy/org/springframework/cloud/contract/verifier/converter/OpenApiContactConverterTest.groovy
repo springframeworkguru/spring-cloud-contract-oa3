@@ -99,6 +99,7 @@ class OpenApiContactConverterTest extends Specification {
         then:
         openApiContract
         yamlContract.request.url == openApiContract.request.url
+        yamlContract.request.urlPath == openApiContract.request.urlPath
         yamlContract.request.method == openApiContract.request.method
         yamlContract.request.cookies == openApiContract.request.cookies
         yamlContract.request.headers == openApiContract.request.headers
@@ -134,7 +135,7 @@ class OpenApiContactConverterTest extends Specification {
 
         then:
         contract
-        contract.getRequest().url.clientValue.equals("/foo1")
+        contract.getRequest().urlPath.clientValue.equals("/foo1")
     }
 
     def "Test Parse of Payor example contracts"() {
@@ -176,7 +177,10 @@ class OpenApiContactConverterTest extends Specification {
         then:
         //contract
         contactConverter.isAccepted(matcherFileOA3)
-       // yamlContract.request.url == openApiContract.request.url
+        yamlContract.request.url == openApiContract.request.url
+        yamlContract.request.urlPath.queryParameters == openApiContract.request.urlPath.queryParameters
+        yamlContract.request.urlPath.serverValue.toString() == openApiContract.request.urlPath.serverValue.toString()
+        yamlContract.request.urlPath.clientValue.toString() == openApiContract.request.urlPath.clientValue.toString()
         yamlContract.request.method == openApiContract.request.method
         yamlContract.request.cookies == openApiContract.request.cookies
         yamlContract.request.headers == openApiContract.request.headers
@@ -186,7 +190,6 @@ class OpenApiContactConverterTest extends Specification {
         yamlContract.response.headers == openApiContract.response.headers
         yamlContract.response.bodyMatchers == openApiContract.response.bodyMatchers
         yamlContract.response.body == openApiContract.response.body // has empty list, which does not convert
-
     }
 
 }
