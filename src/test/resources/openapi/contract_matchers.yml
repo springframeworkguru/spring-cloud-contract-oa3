@@ -5,6 +5,39 @@ info:
 paths:
     /get/1:
         get:
+            parameters:
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                - in: query
+                  name: offset
+                  schema:
+                      type: integer
+                - in: query
+                  name: filter
+                  schema:
+                      type: string
+                - in: query
+                  name: sort
+                  schema:
+                      type: string
+                - in: query
+                  name: search
+                  schema:
+                      type: integer
+                - in: query
+                  name: age
+                  schema:
+                      type: integer
+                - in: query
+                  name: name
+                  schema:
+                      type: string
+                - in: query
+                  name: email
+                  schema:
+                      type: string
             x-contracts:
                 -   contractId: 1
                     name: Contract Matchers Test

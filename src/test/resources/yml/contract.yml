@@ -15,7 +15,7 @@ request:
 #end::request[]
 #tag::request_obligatory[]
   method: PUT
-  url: /foo
+  urlPath: /foo
 #end::request_obligatory[]
 #tag::query_params[]
   queryParameters:

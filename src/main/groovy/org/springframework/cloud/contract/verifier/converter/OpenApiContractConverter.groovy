@@ -97,7 +97,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                             def contractPath = (StringUtils.isEmpty(openApiContract.contractPath)) ? path : openApiContract.contractPath
 
                             yamlContract.request = new YamlContract.Request()
-                            yamlContract.request.url = contractPath
+                            yamlContract.request.urlPath = contractPath
 
                             if (pathItem?.get?.is(operation)) {
                                 yamlContract.request.method = "GET"
@@ -177,6 +177,12 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                                         if (contractBody?.cookies) {
                                             contractBody?.cookies?.each { cookieVal ->
                                                 yamlContract.request.cookies.put(cookieVal.key, cookieVal.value)
+                                            }
+                                        }
+
+                                        if (contractBody?.queryParameters) {
+                                            contractBody?.queryParameters.each { k, v ->
+                                                yamlContract.request.queryParameters.put(k, v)
                                             }
                                         }
 
@@ -392,7 +398,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                             ignored.name = "Ignored Contract"
                             ignored.ignored = true
                             ignored.request = new YamlContract.Request()
-                            ignored.request.url = "/ignored"
+                            ignored.request.urlPath = "/ignored"
                             ignored.request.method = "GET"
                             ignored.response = new YamlContract.Response()
                           //  sccContracts.add(ignored)
