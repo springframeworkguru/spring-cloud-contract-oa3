@@ -1,140 +1,107 @@
 package org.springframework.cloud.contract.verifier.converter
 
 import spock.lang.Specification
-
+import spock.util.environment.RestoreSystemProperties
 
 /**
  * Created by jt on 2019-04-02.
  */
 class ServiceNameTest extends Specification {
 
-    URL petstoreUrl = OpenApiContactConverterTest.getResource("/openapi/openapi_petstore.yml")
-    File petstoreFile = new File(petstoreUrl.toURI())
+    static final URL PETSTORE_URL = OpenApiContactConverterTest.getResource('/openapi/openapi_petstore.yml')
+    static final File PETSTORE_FILE = new File(PETSTORE_URL.toURI())
 
-    OpenApiContractConverter contactConverter
+    OpenApiContractConverter contactConverter = new OpenApiContractConverter()
 
-    void setup() {
-        contactConverter = new OpenApiContractConverter()
+    def 'Test Contract Not Set'() {
+        expect:
+        contactConverter.checkServiceEnabled(null)
     }
 
-    void cleanup() {
-        System.properties.remove(OpenApiContractConverter.SERVICE_NAME_KEY)
+    def 'Test Contract Set, System Param Not Set'() {
+        expect:
+        contactConverter.checkServiceEnabled('FOO')
     }
 
-    def "Test Contract Not Set"(){
-        when:
-        def enabled = contactConverter.checkServiceEnabled(null)
-
-        then:
-        enabled
-    }
-
-    def "Test Contract Set, System Param Not Set"(){
-        when:
-        def enabled = contactConverter.checkServiceEnabled("FOO")
-
-        then:
-        enabled
-    }
-
-    def "Test Contract Set, Should Match one value"() {
+    @RestoreSystemProperties
+    def 'Test Contract Set, Should Match one value'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "ServiceA")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'ServiceA')
 
-        when:
-        def enabled = contactConverter.checkServiceEnabled("ServiceA")
-
-        then:
-        enabled
+        expect:
+        contactConverter.checkServiceEnabled('ServiceA')
     }
 
-    def "Test Contract Set, Should NOT Match one value"() {
+    @RestoreSystemProperties
+    def 'Test Contract Set, Should NOT Match one value'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "ServiceA")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'ServiceA')
 
-        when:
-        def enabled = contactConverter.checkServiceEnabled("ServiceB")
-
-        then:
-        !enabled
+        expect:
+        !contactConverter.checkServiceEnabled('ServiceB')
     }
 
-    def "Test Contract Set, Should Match List of Values"() {
+    @RestoreSystemProperties
+    def 'Test Contract Set, Should Match List of Values'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "ServiceA,ServiceB")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'ServiceA,ServiceB')
 
-        when:
-        def enabled = contactConverter.checkServiceEnabled("ServiceB")
-
-        then:
-        enabled
+        expect:
+        contactConverter.checkServiceEnabled('ServiceB')
     }
 
-    def "Test Contract Set, Should Match List of Values with spaces"() {
+    @RestoreSystemProperties
+    def 'Test Contract Set, Should Match List of Values with spaces'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "ServiceA,  ServiceB")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'ServiceA,  ServiceB')
 
-        when:
-        def enabled = contactConverter.checkServiceEnabled("ServiceB")
-
-        then:
-        enabled
+        expect:
+        contactConverter.checkServiceEnabled('ServiceB')
     }
 
-    def "testNoSystemparam"() {
-        when:
-        def contracts = contactConverter.convertFrom(petstoreFile)
-
-        then:
-        contracts
+    def 'Test no system parameters'() {
+        expect:
+        def contracts = contactConverter.convertFrom(PETSTORE_FILE)
         contracts.size() == 3
     }
 
-    def "test Service A"() {
+    @RestoreSystemProperties
+    def 'test Service A'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "serviceA")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'serviceA')
 
-        when:
-        def contracts = contactConverter.convertFrom(petstoreFile)
-
-        then:
-        contracts
+        expect:
+        def contracts = contactConverter.convertFrom(PETSTORE_FILE)
         contracts.size() == 1
     }
 
-    def "test Service A and B"() {
+    @RestoreSystemProperties
+    def 'test Service A and B'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "serviceA, serviceB")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'serviceA, serviceB')
 
-        when:
-        def contracts = contactConverter.convertFrom(petstoreFile)
-
-        then:
-        contracts
+        expect:
+        def contracts = contactConverter.convertFrom(PETSTORE_FILE)
         contracts.size() == 2
     }
 
-    def "test Service A and C"() {
+    @RestoreSystemProperties
+    def 'test Service A and C'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "serviceA, serviceC")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'serviceA, serviceC')
 
-        when:
-        def contracts = contactConverter.convertFrom(petstoreFile)
-
-        then:
-        contracts
+        expect:
+        def contracts = contactConverter.convertFrom(PETSTORE_FILE)
         contracts.size() == 2
     }
 
-    def "test Service A, B and C"() {
+    @RestoreSystemProperties
+    def 'test Service A, B and C'() {
         given:
-        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, "serviceA,serviceB, serviceC")
+        System.properties.setProperty(OpenApiContractConverter.SERVICE_NAME_KEY, 'serviceA,serviceB, serviceC')
 
-        when:
-        def contracts = contactConverter.convertFrom(petstoreFile)
-
-        then:
-        contracts
+        expect:
+        def contracts = contactConverter.convertFrom(PETSTORE_FILE)
         contracts.size() == 3
     }
 }

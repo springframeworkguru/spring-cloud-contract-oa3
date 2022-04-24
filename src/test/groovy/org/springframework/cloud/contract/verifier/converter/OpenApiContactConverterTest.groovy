@@ -8,185 +8,151 @@ import spock.lang.Specification
  */
 class OpenApiContactConverterTest extends Specification {
 
-    URL contractUrl = OpenApiContactConverterTest.getResource("/yml/contract.yml")
-    File contractFile = new File(contractUrl.toURI())
-    URL contractOA3Url = OpenApiContactConverterTest.getResource("/openapi/contract_OA3.yml")
-    File contractOA3File = new File(contractOA3Url.toURI())
+    static final URL CONTRACT_URL = OpenApiContactConverterTest.getResource('/yml/contract.yml')
+    static final File CONTRACT_FILE = new File(CONTRACT_URL.toURI())
 
-    URL contractOA3UrlPath = OpenApiContactConverterTest.getResource("/openapi/contract_OA3_contractPath.yml")
-    File contractOA3FilePath = new File(contractOA3UrlPath.toURI())
+    static final URL CONTRACT_OA3_URL = OpenApiContactConverterTest.getResource('/openapi/contract_OA3.yml')
+    static final File CONTRACT_OA3_FILE = new File(CONTRACT_OA3_URL.toURI())
 
-    URL fruadApiUrl = OpenApiContactConverterTest.getResource("/openapi/openapi.yml")
-    File fraudApiFile = new File(fruadApiUrl.toURI())
+    static final URL CONTRACT_OA3_URL_PATH = OpenApiContactConverterTest.getResource('/openapi/contract_OA3_contractPath.yml')
+    static final File CONTRACT_OA3_FILE_PATH = new File(CONTRACT_OA3_URL_PATH.toURI())
 
-    URL payorApiUrl = OpenApiContactConverterTest.getResource("/openapi/payor_example.yml")
-    File payorApiFile = new File(payorApiUrl.toURI())
+    static final URL FRAUD_API_URL = OpenApiContactConverterTest.getResource('/openapi/openapi.yml')
+    static final File FRAUD_API_FILE = new File(FRAUD_API_URL.toURI())
 
-    URL veloApiUrl = OpenApiContactConverterTest.getResource("/openapi/velooa3.yaml")
-    File veloApiFile = new File(veloApiUrl.toURI())
+    static final URL PAYOR_API_URL = OpenApiContactConverterTest.getResource('/openapi/payor_example.yml')
+    static final File PAYOR_API_FILE = new File(PAYOR_API_URL.toURI())
 
-    URL matcherUrl = OpenApiContactConverterTest.getResource("/yml/contract_matchers.yml")
-    File matcherFile = new File(matcherUrl.toURI())
+    static final URL VELO_API_URL = OpenApiContactConverterTest.getResource('/openapi/velooa3.yaml')
+    static final File VELO_API_FILE = new File(VELO_API_URL.toURI())
 
-    URL matcherUrlOA3 = OpenApiContactConverterTest.getResource("/openapi/contract_matchers.yml")
-    File matcherFileOA3 = new File(matcherUrlOA3.toURI())
+    static final URL MATCHER_URL = OpenApiContactConverterTest.getResource('/yml/contract_matchers.yml')
+    static final File MATCHER_FILE = new File(MATCHER_URL.toURI())
 
-    OpenApiContractConverter contactConverter
-    YamlContractConverter yamlContractConverter
+    static final URL MATCHER_URL_OA3 = OpenApiContactConverterTest.getResource('/openapi/contract_matchers.yml')
+    static final File MATCHER_FILE_OA3 = new File(MATCHER_URL_OA3.toURI())
 
-    void setup() {
-        contactConverter = new OpenApiContractConverter()
-        yamlContractConverter = new YamlContractConverter()
-    }
+    OpenApiContractConverter contactConverter = new OpenApiContractConverter()
+    YamlContractConverter yamlContractConverter = new YamlContractConverter()
 
-    def "IsAccepted True"() {
+    def 'IsAccepted True'() {
         given:
         File file = new File('src/test/resources/openapi/openapi_petstore.yml')
-        when:
 
-        def result = contactConverter.isAccepted(file)
-
-        then:
-        result
+        expect:
+        contactConverter.isAccepted(file)
     }
 
-    def "IsAccepted True 2"() {
+    def 'IsAccepted True 2'() {
         given:
         File file = new File('src/test/resources/openapi/openapi.yml')
-        when:
 
-        def result = contactConverter.isAccepted(file)
-
-        then:
-        result
+        expect:
+        contactConverter.isAccepted(file)
     }
 
-    def "IsAccepted False"() {
+    def 'IsAccepted False'() {
         given:
         File file = new File('foo')
-        when:
 
-        def result = contactConverter.isAccepted(file)
-
-        then:
-        !result
-
+        expect:
+        !contactConverter.isAccepted(file)
     }
 
-    def "ConvertFrom - should not go boom"() {
+    def 'ConvertFrom - should not go boom'() {
         given:
         File file = new File('src/test/resources/openapi/openapi.yml')
-        when:
 
-        def result = contactConverter.convertFrom(file)
-
-        println result
-
-        then:
-        result != null
+        expect:
+        contactConverter.convertFrom(file)
     }
 
-
-    def "Test Yaml Contract"() {
-        given:
-        Contract yamlContract = yamlContractConverter.convertFrom(contractFile).first()
-        Collection<Contract> oa3Contract = contactConverter.convertFrom(contractOA3File)
-
+    def 'Test Yaml Contract'() {
         when:
-
-        Contract openApiContract = oa3Contract.find { it.name.equalsIgnoreCase("some name") }
+        Contract yamlContract = yamlContractConverter.convertFrom(CONTRACT_FILE).first()
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(CONTRACT_OA3_FILE)
 
         then:
-        openApiContract
-        yamlContract.request.url == openApiContract.request.url
-        yamlContract.request.method == openApiContract.request.method
-        yamlContract.request.cookies == openApiContract.request.cookies
-        yamlContract.request.headers == openApiContract.request.headers
-        yamlContract.request.body == openApiContract.request.body
-        yamlContract.request.bodyMatchers == openApiContract.request.bodyMatchers
-        yamlContract.response.status == openApiContract.response.status
-        yamlContract.response.headers == openApiContract.response.headers
-        yamlContract.response.bodyMatchers == openApiContract.response.bodyMatchers
-        yamlContract.response.body == openApiContract.response.body
+        Contract openApiContract = oa3Contract.find { it.name == 'some name' }
+        with(yamlContract.request) {
+            it.url == openApiContract.request.url
+            it.method == openApiContract.request.method
+            it.cookies == openApiContract.request.cookies
+            it.headers == openApiContract.request.headers
+            it.body == openApiContract.request.body
+            it.bodyMatchers == openApiContract.request.bodyMatchers
+        }
+        with(yamlContract.response) {
+            it.status == openApiContract.response.status
+            it.headers == openApiContract.response.headers
+            it.bodyMatchers == openApiContract.response.bodyMatchers
+            it.body == openApiContract.response.body
+        }
         yamlContract == openApiContract
-
     }
 
-    def "test OA3 Fraud Yml"() {
+    def 'Test OA3 Fraud Yml'() {
         given:
-        Collection<Contract> oa3Contract = contactConverter.convertFrom(fraudApiFile)
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(FRAUD_API_FILE)
 
         when:
-        Contract contract = oa3Contract.getAt(0)
+        Contract contract = oa3Contract[0]
 
         then:
         contract
         oa3Contract.size() == 6
-
     }
 
-    def "Test parse of test path"() {
-        given:
-        Collection<Contract> oa3Contract = contactConverter.convertFrom(contractOA3FilePath)
-
+    def 'Test parse of test path'() {
         when:
-        Contract contract = oa3Contract.getAt(0)
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(CONTRACT_OA3_FILE_PATH)
 
         then:
-        contract
-        contract.getRequest().url.clientValue.equals("/foo1")
+        oa3Contract[0]
+        oa3Contract[0].request.url.clientValue == '/foo1'
     }
 
-    def "Test Parse of Payor example contracts"() {
-
-        given:
-        Collection<Contract> oa3Contract = contactConverter.convertFrom(payorApiFile)
-
+    def 'Test Parse of Payor example contracts'() {
         when:
-        Contract contract = oa3Contract.getAt(0)
+        Collection<Contract> oa3Contract = contactConverter.convertFrom(PAYOR_API_FILE)
 
         then:
-        contract
+        oa3Contract[0]
     }
 
-    def "Test Parse of Velo Contracts"() {
-
-        given:
-        Collection<Contract> veloContracts = contactConverter.convertFrom(veloApiFile)
-
+    def 'Test Parse of Velo Contracts'() {
         when:
-        //Contract contract = oa3Contract.getAt(0)
-        Contract veloContract = veloContracts.getAt(0)
+        Collection<Contract> veloContracts = contactConverter.convertFrom(VELO_API_FILE)
 
         then:
-        //contract
-        contactConverter.isAccepted(veloApiFile)
+        veloContracts[0]
+        contactConverter.isAccepted(VELO_API_FILE)
     }
 
-    def "Test Parse of Matchers"() {
-
+    def 'Test Parse of Matchers'() {
         given:
-        Contract yamlContract = yamlContractConverter.convertFrom(matcherFile).first()
-        Collection<Contract> matcherContracts = contactConverter.convertFrom(matcherFileOA3)
+        Contract yamlContract = yamlContractConverter.convertFrom(MATCHER_FILE).first()
+        Collection<Contract> matcherContracts = contactConverter.convertFrom(MATCHER_FILE_OA3)
 
         when:
-
-        Contract openApiContract = matcherContracts.getAt(0)
+        Contract openApiContract = matcherContracts[0]
 
         then:
-        //contract
-        contactConverter.isAccepted(matcherFileOA3)
-       // yamlContract.request.url == openApiContract.request.url
-        yamlContract.request.method == openApiContract.request.method
-        yamlContract.request.cookies == openApiContract.request.cookies
-        yamlContract.request.headers == openApiContract.request.headers
-        yamlContract.request.body == openApiContract.request.body  // has empty list, which does not convert
-        yamlContract.request.bodyMatchers == openApiContract.request.bodyMatchers
-        yamlContract.response.status == openApiContract.response.status
-        yamlContract.response.headers == openApiContract.response.headers
-        yamlContract.response.bodyMatchers == openApiContract.response.bodyMatchers
-        yamlContract.response.body == openApiContract.response.body // has empty list, which does not convert
-
+        contactConverter.isAccepted(MATCHER_FILE_OA3)
+        with(yamlContract.request) {
+            it.urlPath.serverValue == openApiContract.request.url.serverValue
+            it.urlPath.clientValue as String == openApiContract.request.url.clientValue as String
+            it.method == openApiContract.request.method
+            it.cookies == openApiContract.request.cookies
+            it.headers == openApiContract.request.headers
+            it.body == openApiContract.request.body  // has empty list, which does not convert
+            it.bodyMatchers == openApiContract.request.bodyMatchers
+        }
+        with(yamlContract.response) {
+            yamlContract.response.status == openApiContract.response.status
+            yamlContract.response.headers == openApiContract.response.headers
+            yamlContract.response.bodyMatchers == openApiContract.response.bodyMatchers
+            yamlContract.response.body == openApiContract.response.body // has empty list, which does not convert
+        }
     }
-
 }
