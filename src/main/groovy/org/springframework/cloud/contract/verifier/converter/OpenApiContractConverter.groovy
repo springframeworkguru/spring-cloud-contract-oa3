@@ -51,7 +51,7 @@ class OpenApiContractConverter implements ContractConverter<Collection<PathItem>
                     v.readOperations().each { operation ->
                         if (operation.extensions) {
                             def contracts = operation.extensions."x-contracts"
-                            if (contracts != null && contracts.size > 0) {
+                            if (contracts != null && contracts.size() > 0) {
                                 contractsFound = true
                             }
                         }
